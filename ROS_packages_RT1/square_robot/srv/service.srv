@@ -1,0 +1,5 @@
+float32 RandX
+float32 RandY
+---
+float32 PosX
+float32 PosY
