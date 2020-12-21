@@ -30,31 +30,31 @@ void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback e execu
 	geometry_msgs::Twist vel;	//criei uma mensagem do tipo geometry_msgs Twist
 	/* Agora eu preciso preencher as informacoes das mensagens, p/ isso eu uso o comando "rosmsg show geometry_msgs/Twist" */
 	
-	float t, PosX, PosY;
+	float t, X, Y;
 	
 	//PosX = (rand() %6)-6;	//randon numbers from -6 to 6
 	//PosY = (rand() %6)-6;
-	PosX = 1;
-	PosY = 1;
+	//X = PosX;
+	//Y = PosY;
 
-if (msg->pose.pose.position.x < PosX)
+if (msg->pose.pose.position.x < X)
 	{
 	vel.linear.x = 0.2;
 	vel.linear.y = 0.0;
 	}
 
-else if(msg->pose.pose.position.y < PosY)
+else if(msg->pose.pose.position.y < Y)
 	{
 	vel.linear.x = 0.0;
 	vel.linear.y = 0.2;
 	}
 
-if(msg->pose.pose.position.x > PosX)
+if(msg->pose.pose.position.x > X)
 	{
 	vel.linear.x = -0.2;
 	//vel.linear.y = 0.0;
 	}
-else if(msg->pose.pose.position.y > PosY)
+else if(msg->pose.pose.position.y > Y)
 	{
 	vel.linear.x = 0.0;
 	vel.linear.y = -0.2;
@@ -66,14 +66,14 @@ else if(msg->pose.pose.position.y > PosY)
 
 	pub.publish(vel);
 
-	std::cout << "Your target in X is: " << PosX << std::endl;
-	std::cout << "Your target in Y is: " << PosY << std::endl;
+	std::cout << "Your target in X is: " << X << std::endl;
+	std::cout << "Your target in Y is: " << Y << std::endl;
 
-if((PosX - msg->pose.pose.position.x)< 0.06)
+if((X - msg->pose.pose.position.x)< 0.06)
 	{
 	std::cout << "Robot on target X" << std::endl;
 	}
-else if((PosY - msg->pose.pose.position.y)< 0.06)
+else if((Y - msg->pose.pose.position.y)< 0.06)
 	{
 	std::cout << "Robot on target Y" << std::endl;
 	}
@@ -81,7 +81,7 @@ else if((PosY - msg->pose.pose.position.y)< 0.06)
 }
 
 int main(int argc, char **argv)
-{
+{	float PosX, PosY;
 	ros::init(argc, argv, "call_robot_target");	//third argumment is the name of the node that I'm creating
 	ros::NodeHandle n;
 
@@ -92,8 +92,8 @@ int main(int argc, char **argv)
 
 	square_robot::service srv;
 
-	srv.request.RandX = 1;	//atoll(argv[1]);
-	srv.request.RandY = 1;	//atoll(argv[2]);
+	srv.request.RandX = PosX;	//atoll(argv[1]);
+	srv.request.RandY = PosY;	//atoll(argv[2]);
 
 	client.call(srv);
 

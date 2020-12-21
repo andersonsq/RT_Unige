@@ -28,14 +28,19 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 }
 	
 	/*Server function*/
-    	bool targert_function(square_robot::service::Request  &req,
-              	square_robot::service::Response  &res)
-	      
-{
-	req.RandX = res.PosX;
-	req.RandY = res.PosY;
-	return true;
-}
+
+	double randMToN(double M, double N)
+	{     
+	return M + (rand() / ( RAND_MAX / (N-M) ) ) ; 
+	}
+
+	bool myrandom (square_robot::service::Request &req, 
+	square_robot::service::Response &res)
+	{
+	res.PosX = randMToN(req.RandX, req.RandX);
+    	res.PosY = randMToN(req.RandY, req.RandY);
+    	return true;
+	}
 
 
 int main(int argc, char **argv)
@@ -43,7 +48,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "reply_target");	//third argumment is the name of the node that I'm creating
 	ros::NodeHandle n;	
 	
-	ros::ServiceServer service = n.advertiseService("setting_target", targert_function);
+	ros::ServiceServer service = n.advertiseService("setting_target", myrandom);
 
 	
 	ros::spin();
@@ -53,26 +58,7 @@ int main(int argc, char **argv)
 	while (ros::ok())
 	{
 	/* Will reply to the client with the random target */
-	
-	/*	
-	ros::Publisher pub; //Declaro o publisher como variavel global de nome "pub"
-	geometry_msgs::Twist vel;
-	pub.publish(vel);
 
-	int t, PosX, PosY;
-	
-	PosX = 2;
-	PosY = 3;
-
-	vel.linear.x = 0.1;
-	vel.linear.y = 0.1;
-	vel.linear.z = 0.1;
-
-	vel.angular.x = 0.1;
-	vel.angular.y = 0.1;
-	vel.angular.z = 0.1;
-
-	t = PosX / vel.linear.x;
 	*/
 	}
 
