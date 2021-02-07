@@ -104,13 +104,15 @@ int main(int argc, char **argv)
 
 	square_robot::service srv;
 
+/*
+	srv.request.RandX = 6;		//<--------My error is here, don't know how to solve it	
+	srv.request.RandY = -6;		//<--------My error is here, don't know how to solve it
+*/
 
 /*
-	srv.request.RandX = PosX;	<--------My error is here, don't know how to solve it	
-	srv.request.RandY = PosY;	<--------My error is here, don't know how to solve it
+	srv.request.RandX = PosX;	//<--------My error is here, don't know how to solve it	
+	srv.request.RandY = PosY;	//<--------My error is here, don't know how to solve it
 */
-	//Set velocity
-//	ros::Publisher pub; //Declaro o publisher como variavel global de nome "pub"
 
 	ros::spin();
 

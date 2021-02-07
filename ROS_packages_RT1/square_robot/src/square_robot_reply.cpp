@@ -17,7 +17,10 @@ A target is considered reached when the distance between the robot and the targe
 #include "square_robot/service.h"
 
 	ros::ServiceServer service;	//Declare the service server as global variable with name "service"
+	square_robot::service srv;
 
+float X_target = 0;
+float Y_target = 0;
 
 void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
@@ -26,6 +29,13 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 		std::cout << "Robot out of range" << std::endl;
 		ros::shutdown();
 		}
+/*
+	srv.request.RandX = 6;		//<--------My error is here, don't know how to solve it	
+	srv.request.RandY = -6;		//<--------My error is here, don't know how to solve it
+
+	X_target = srv.response.PosX;	//<--------My error is here, don't know how to solve it	
+	Y_target = srv.response.PosY;	//<--------My error is here, don't know how to solve it
+*/
 }
 	
 	/*Server function*/
