@@ -3,6 +3,7 @@ A target is considered reached when the distance between the robot and the targe
 
 #include "ros/ros.h"
 #include <stdlib.h>
+#include <cstdlib>
 #include <stdio.h>
 
 #include "std_msgs/String.h"
@@ -11,11 +12,11 @@ A target is considered reached when the distance between the robot and the targe
 
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Twist.h"
-#include "roscpp/GetLoggers.h"		//Vou usar no Service
-#include "roscpp/SetLoggerLevel.h"	//Vou usar no Service
-#include "std_srvs/Empty.h"		//Vou usar no Service
 
+#include <math.h>
 #include "square_robot/service.h"
+
+	ros::ServiceServer service;	//Declare the service server as global variable with name "service"
 
 
 void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
@@ -31,35 +32,33 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 
 	double randMToN(double M, double N)
 	{     
-	return M + (rand() / ( RAND_MAX / (N-M) ) ) ; 
-	}
+	//rand() % 6 + 1;
+	//int rand();
+	//int M = 6;
+	//int N = -6;
+	return M + (rand() / (RAND_MAX / (N-M)));	
+        }
 
 	bool myrandom (square_robot::service::Request &req, 
 	square_robot::service::Response &res)
 	{
-	res.PosX = randMToN(req.RandX, req.RandX);
-    	res.PosY = randMToN(req.RandY, req.RandY);
+	res.PosX = randMToN(req.RandX, req.RandY);
+    	res.PosY = randMToN(req.RandX, req.RandY);
     	return true;
 	}
-
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "reply_target");	//third argumment is the name of the node that I'm creating
 	ros::NodeHandle n;	
 	
-	ros::ServiceServer service = n.advertiseService("setting_target", myrandom);
+	service = n.advertiseService("/setting_target", myrandom);
 
-	
 	ros::spin();
-	//ros::Rate loop_rate(10);
-
 
 	while (ros::ok())
 	{
-	/* Will reply to the client with the random target */
-
-	*/
+	/* Will reply to the client with the random target */	
 	}
 
 return 0;

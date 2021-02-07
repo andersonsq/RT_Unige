@@ -13,30 +13,29 @@
 
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Twist.h"
-#include "roscpp/GetLoggers.h"		//Vou usar no Service
-#include "roscpp/SetLoggerLevel.h"	//Vou usar no Service
-#include "std_srvs/Empty.h"		//Vou usar no Service
 
+#include <math.h>
 #include "square_robot/service.h"
 
+	//Declare all variables as global
+	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
+	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
+	square_robot::service srv;	//Declare the service file as "srv"
+	//ros::ServiceServer service;
 
-ros::Publisher pub; //Declaro o publisher como variavel global de nome "pub"
-
-//void positionCallback(const geometry_msgs::Point position::ConstPtr& msg)
-
-void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback e executado toda vez q recebe algo de um topico
+void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is executed verytime I receive a new topic
 {
-	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);//recebo a posiçao do meu robo
-	geometry_msgs::Twist vel;	//criei uma mensagem do tipo geometry_msgs Twist
+	//Receive the position of my robot
+	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
+	
+	//Created a mesage of type geometry_msgs Twist
+	geometry_msgs::Twist vel;
+	
 	/* Agora eu preciso preencher as informacoes das mensagens, p/ isso eu uso o comando "rosmsg show geometry_msgs/Twist" */
 	
-	float t, X, Y;
+	float X	= srv.response.PosX-msg->pose.pose.position.x;
+	float Y = srv.response.PosY-msg->pose.pose.position.y;
 	
-	//PosX = (rand() %6)-6;	//randon numbers from -6 to 6
-	//PosY = (rand() %6)-6;
-	//X = PosX;
-	//Y = PosY;
-
 if (msg->pose.pose.position.x < X)
 	{
 	vel.linear.x = 0.2;
@@ -72,30 +71,46 @@ else if(msg->pose.pose.position.y > Y)
 if((X - msg->pose.pose.position.x)< 0.06)
 	{
 	std::cout << "Robot on target X" << std::endl;
+	vel.linear.x = 0.0;
 	}
 else if((Y - msg->pose.pose.position.y)< 0.06)
 	{
 	std::cout << "Robot on target Y" << std::endl;
+	vel.linear.y = 0.0;
 	}
-
+	
+	//Call a new random position 
+	client.call(srv);
 }
 
 int main(int argc, char **argv)
-{	float PosX, PosY;
+{	
 	ros::init(argc, argv, "call_robot_target");	//third argumment is the name of the node that I'm creating
+
+	//Declare new nodes	
 	ros::NodeHandle n;
 
-	ros::ServiceClient client = n.serviceClient<square_robot::service>("setting_target");
+	//Inicialize the client
+	client = n.serviceClient<square_robot::service>("/setting_target");
 
-	pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);//P/ preencher o publisher, eu preciso usar o comando "rostopic type /cmd_vel
+	//Call the random position
+	client.call(srv);
+
+	//Initialize my publisher in /cmd_vel
+	pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);//To fill the publisher, I need to use the comand "rostopic type /cmd_vel
+
+	//Subscribe and set a position in positionCall back function
 	ros::Subscriber sub = n.subscribe("/odom", 1000, positionCallback); //escrevo a posiçao do robo	 
 
 	square_robot::service srv;
 
-	srv.request.RandX = PosX;	//atoll(argv[1]);
-	srv.request.RandY = PosY;	//atoll(argv[2]);
 
-	client.call(srv);
+/*
+	srv.request.RandX = PosX;	<--------My error is here, don't know how to solve it	
+	srv.request.RandY = PosY;	<--------My error is here, don't know how to solve it
+*/
+	//Set velocity
+//	ros::Publisher pub; //Declaro o publisher como variavel global de nome "pub"
 
 	ros::spin();
 
@@ -103,9 +118,7 @@ int main(int argc, char **argv)
 
 	while (ros::ok())
 	{	
-	/*
-
-	*/
+	/**/
 	}
 
 return 0;
