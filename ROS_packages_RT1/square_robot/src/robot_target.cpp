@@ -21,7 +21,6 @@
 	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
 	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
 	square_robot::service srv;	//Declare the service file as "srv"
-	//ros::ServiceServer service;
 
 void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is executed verytime I receive a new topic
 {
@@ -33,15 +32,17 @@ void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is exec
 	
 	/* Agora eu preciso preencher as informacoes das mensagens, p/ isso eu uso o comando "rosmsg show geometry_msgs/Twist" */
 	
-	float X	= srv.response.PosX-msg->pose.pose.position.x;
-	float Y = srv.response.PosY-msg->pose.pose.position.y;
-	
+	float X	= srv.response.PosX;//-msg->pose.pose.position.x;
+	float Y = srv.response.PosY;//-msg->pose.pose.position.y;
+
+//if (X < 0)	
 if (msg->pose.pose.position.x < X)
 	{
 	vel.linear.x = 0.2;
 	vel.linear.y = 0.0;
 	}
 
+//else if (Y < 0)
 else if(msg->pose.pose.position.y < Y)
 	{
 	vel.linear.x = 0.0;
@@ -49,23 +50,27 @@ else if(msg->pose.pose.position.y < Y)
 	}
 	client.call(srv);
 
+//if (X > 0)
 if(msg->pose.pose.position.x > X)
 	{
 	vel.linear.x = -0.2;
 	//vel.linear.y = 0.0;
 	}
+
+//else if (Y > 0)
 else if(msg->pose.pose.position.y > Y)
 	{
 	vel.linear.x = 0.0;
 	vel.linear.y = -0.2;
 	}
-	client.call(srv);
 	
 	vel.angular.x = 0.0;
 	vel.angular.y = 0.0;
 	vel.angular.z = 0.0;
 
 	pub.publish(vel);
+
+	client.call(srv);
 
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;
@@ -104,9 +109,9 @@ int main(int argc, char **argv)
 	//Subscribe and set a position in positionCall back function
 	ros::Subscriber sub = n.subscribe("/odom", 1000, positionCallback); //escrevo a posiçao do robo	 
 
-	square_robot::service srv;
+	//square_robot::service srv;
 
-	srv.request.RandX = -=6;		//<--------My error is here, don't know how to solve it	
+	srv.request.RandX = -6;		//<--------My error is here, don't know how to solve it	
 	srv.request.RandY = 6;		//<--------My error is here, don't know how to solve it
 
 

@@ -40,10 +40,9 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 	
 	/*Server function*/
 
-	//double randMToN(double M, double N)
 	double randMToN(double M, double N)
 	{     
-	return M + (rand() / (RAND_MAX / (M-N)));	
+	return M + (rand() / (RAND_MAX / (N-M)));	
         }
 
 	bool myrandom (square_robot::service::Request &req, 
