@@ -29,13 +29,6 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 		std::cout << "Robot out of range" << std::endl;
 		ros::shutdown();
 		}
-/*
-	srv.request.RandX = 6;		//<--------My error is here, don't know how to solve it	
-	srv.request.RandY = -6;		//<--------My error is here, don't know how to solve it
-
-	X_target = srv.response.PosX;	//<--------My error is here, don't know how to solve it	
-	Y_target = srv.response.PosY;	//<--------My error is here, don't know how to solve it
-*/
 }
 	
 	/*Server function*/
