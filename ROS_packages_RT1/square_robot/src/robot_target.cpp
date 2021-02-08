@@ -47,6 +47,7 @@ else if(msg->pose.pose.position.y < Y)
 	vel.linear.x = 0.0;
 	vel.linear.y = 0.2;
 	}
+	client.call(srv);
 
 if(msg->pose.pose.position.x > X)
 	{
@@ -58,6 +59,7 @@ else if(msg->pose.pose.position.y > Y)
 	vel.linear.x = 0.0;
 	vel.linear.y = -0.2;
 	}
+	client.call(srv);
 	
 	vel.angular.x = 0.0;
 	vel.angular.y = 0.0;
@@ -73,7 +75,7 @@ if((X - msg->pose.pose.position.x)< 0.06)
 	std::cout << "Robot on target X" << std::endl;
 	vel.linear.x = 0.0;
 	}
-else if((Y - msg->pose.pose.position.y)< 0.06)
+if((Y - msg->pose.pose.position.y)< 0.06)
 	{
 	std::cout << "Robot on target Y" << std::endl;
 	vel.linear.y = 0.0;
@@ -104,10 +106,9 @@ int main(int argc, char **argv)
 
 	square_robot::service srv;
 
-/*
 	srv.request.RandX = 6;		//<--------My error is here, don't know how to solve it	
 	srv.request.RandY = -6;		//<--------My error is here, don't know how to solve it
-*/
+
 
 /*
 	srv.request.RandX = PosX;	//<--------My error is here, don't know how to solve it	
