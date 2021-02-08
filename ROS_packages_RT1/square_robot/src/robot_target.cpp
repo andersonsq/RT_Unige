@@ -106,8 +106,8 @@ int main(int argc, char **argv)
 
 	square_robot::service srv;
 
-	srv.request.RandX = 6;		//<--------My error is here, don't know how to solve it	
-	srv.request.RandY = -6;		//<--------My error is here, don't know how to solve it
+	srv.request.RandX = -=6;		//<--------My error is here, don't know how to solve it	
+	srv.request.RandY = 6;		//<--------My error is here, don't know how to solve it
 
 
 /*
