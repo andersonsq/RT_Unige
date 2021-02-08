@@ -41,7 +41,7 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 	/*Server function*/
 
 	//double randMToN(double M, double N)
-	double randMToN(req.RandX, req.RandY)
+	double randMToN(double req.RandX, double req.RandY)
 	{     
 	return M + (rand() / (RAND_MAX / (req.RandX-req.RandY)));	
         }
