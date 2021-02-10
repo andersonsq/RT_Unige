@@ -20,32 +20,33 @@
 	//Declare all variables as global
 	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
 	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
-	//ros::Rate r(1);			//Declare a delay of 1second with name "r"
 	square_robot::service srv;	//Declare the service file as "srv"
 
-void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is executed verytime I receive a new topic
+//positonCallback LOOP
+void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)	//Callback is executed verytime I receive a new topic
 {
-	//Receive the position of my robot
+	//Receive the position of my robot and print it on the shell
 	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
 	
 	//Created a mesage of type geometry_msgs Twist
 	geometry_msgs::Twist vel;
-	
-	/* Agora eu preciso preencher as informacoes das mensagens, p/ isso eu uso o comando "rosmsg show geometry_msgs/Twist" */
-	
-	float X	= srv.response.PosX;//-msg->pose.pose.position.x;
-	float Y = srv.response.PosY;//-msg->pose.pose.position.y;
 
-ros::Rate r(1);
+	ros::Rate r(2);			//Declare a delay of 2 seconds with name "r
+	
+	/* Now I need to fill the inforations of te messages, for that, I use the command "rosmsg show geometry_msgs/Twist" */
+	
+	//Store the random values of my service PosX and PosY in my variables X and Y
+	float X	= srv.response.PosX;
+	float Y = srv.response.PosY;
 
-//if (X < 0)	
+//Send the robot to my target position in the X axis positive
 if (msg->pose.pose.position.x < X)
 	{
 	vel.linear.x = 0.2;
 	vel.linear.y = 0.0;
 	}
 
-//else if (Y < 0)
+//Send the robot to my target position in the Y axis positive
 else if(msg->pose.pose.position.y < Y)
 	{
 	vel.linear.x = 0.0;
@@ -53,56 +54,41 @@ else if(msg->pose.pose.position.y < Y)
 	}
 	//client.call(srv);
 
-//if (X > 0)
+//Send the robot to my target position in the X axis negative
 if(msg->pose.pose.position.x > X)
 	{
 	vel.linear.x = -0.2;
 	//vel.linear.y = 0.0;
 	}
 
-//else if (Y > 0)
+//Send the robot to my target position in the Y axis negative
 else if(msg->pose.pose.position.y > Y)
 	{
 	vel.linear.x = 0.0;
 	vel.linear.y = -0.2;
 	}
 	
+	//Set all mu angula velocities to 0
 	vel.angular.x = 0.0;
 	vel.angular.y = 0.0;
 	vel.angular.z = 0.0;
-
-	//client.call(srv);
-
+	
+	//Print in the shell the postion of my target in X and Y
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;
 
+	//Publish my velocity
 	pub.publish(vel);
 
-if((X - msg->pose.pose.position.x == 0.05 || -0.05) && (Y - msg->pose.pose.position.y == 0.05 || -0.05));
+//Logic to chech if my robot reached the target position
+if((X - msg->pose.pose.position.x <= 0.05 && X - msg->pose.pose.position.x > -0.05) && (Y - msg->pose.pose.position.y <= 0.05 && Y - msg->pose.pose.position.y>-0.05))
 	{
 	std::cout << "Robot on target X and Y" << std::endl;
-	vel.linear.x = 0.0;
-	vel.linear.y = 0.0;
-	//pub.publish(vel);
-	//r.sleep();
-	client.call(srv);
+	vel.linear.x = 0.0;	//stop the robot
+	vel.linear.y = 0.0;	//stop the robot
+	r.sleep();		//delay of 2s
+	client.call(srv);	//call a new random position
 	}
-
-/*
-if((X - msg->pose.pose.position.x)< 0.06)
-	{
-	std::cout << "Robot on target X" << std::endl;
-	vel.linear.x = 0.0;
-	}
-if((Y - msg->pose.pose.position.y)< 0.06)
-	{
-	std::cout << "Robot on target Y" << std::endl;
-	vel.linear.y = 0.0;
-	}
-	
-	//Call a new random position 
-	client.call(srv);
-*/
 }
 
 int main(int argc, char **argv)
@@ -122,14 +108,13 @@ int main(int argc, char **argv)
 	pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1000);//To fill the publisher, I need to use the comand "rostopic type /cmd_vel
 
 	//Subscribe and set a position in positionCall back function
-	ros::Subscriber sub = n.subscribe("/odom", 1000, positionCallback); //escrevo a posiçao do robo	 
+	ros::Subscriber sub = n.subscribe("/odom", 1000, positionCallback); //I'm subscribing in "/odom"	 
 
-	srv.request.RandX = -6;		
-	srv.request.RandY = 6;		
+	//Set the limits of my random number to be between -6 and 6
+	srv.request.RandX = -6;		//--------> N		
+	srv.request.RandY = 6;		//--------> M		
 
 	ros::spin();
-
-	//ros::Rate loop_rate(10);
 
 	while (ros::ok())
 	{	

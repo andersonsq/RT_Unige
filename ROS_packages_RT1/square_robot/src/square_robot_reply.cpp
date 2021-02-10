@@ -17,13 +17,12 @@ A target is considered reached when the distance between the robot and the targe
 #include "square_robot/service.h"
 
 	ros::ServiceServer service;	//Declare the service server as global variable with name "service"
-	square_robot::service srv;
+	square_robot::service srv;	//Call my service.srv fille from my square_robot::package and give the name of "srv"
 
-float X_target = 0;
-float Y_target = 0;
-
+//SubscriberCallback LOOP
 void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
+	//Logic to check that I never receive a position outside my range
 	if((msg->pose.pose.position.x > 6.0 || msg->pose.pose.position.x < -6.0) || (msg->pose.pose.position.y > 6.0 || msg->pose.pose.position.y < -6.0))
 		{
 		std::cout << "Robot out of range" << std::endl;
@@ -31,13 +30,13 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 		}
 }
 	
-	/*Server function*/
-
+	//Server function to generate my random number from -6(N) to 6(M)
 	double randMToN(double M, double N)
 	{     
 	return M + (rand() / (RAND_MAX / (N-M)));	
         }
 
+	//Function to take my random numbers from randMToN and then attribute then
 	bool myrandom (square_robot::service::Request &req, 
 	square_robot::service::Response &res)
 	{
@@ -49,6 +48,8 @@ void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "reply_target");	//third argumment is the name of the node that I'm creating
+
+	//Declare new nodes
 	ros::NodeHandle n;	
 	
 	service = n.advertiseService("/setting_target", myrandom);
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
 
 	while (ros::ok())
 	{
-	/* Will reply to the client with the random target */	
+	/**/	
 	}
 
 return 0;
