@@ -20,6 +20,7 @@
 	//Declare all variables as global
 	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
 	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
+	//ros::Rate r(1);			//Declare a delay of 1second with name "r"
 	square_robot::service srv;	//Declare the service file as "srv"
 
 void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is executed verytime I receive a new topic
@@ -34,6 +35,8 @@ void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)//Callback is exec
 	
 	float X	= srv.response.PosX;//-msg->pose.pose.position.x;
 	float Y = srv.response.PosY;//-msg->pose.pose.position.y;
+
+ros::Rate r(1);
 
 //if (X < 0)	
 if (msg->pose.pose.position.x < X)
@@ -68,13 +71,24 @@ else if(msg->pose.pose.position.y > Y)
 	vel.angular.y = 0.0;
 	vel.angular.z = 0.0;
 
-	pub.publish(vel);
-
 	//client.call(srv);
 
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;
 
+	pub.publish(vel);
+
+if((X - msg->pose.pose.position.x == 0.05 || -0.05) && (Y - msg->pose.pose.position.y == 0.05 || -0.05));
+	{
+	std::cout << "Robot on target X and Y" << std::endl;
+	vel.linear.x = 0.0;
+	vel.linear.y = 0.0;
+	//pub.publish(vel);
+	//r.sleep();
+	client.call(srv);
+	}
+
+/*
 if((X - msg->pose.pose.position.x)< 0.06)
 	{
 	std::cout << "Robot on target X" << std::endl;
@@ -88,6 +102,7 @@ if((Y - msg->pose.pose.position.y)< 0.06)
 	
 	//Call a new random position 
 	client.call(srv);
+*/
 }
 
 int main(int argc, char **argv)
