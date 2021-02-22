@@ -15,58 +15,21 @@
 #include <math.h>
 #include "final_assignment/service.h"
 
+
 	//Declare all variables as global
 	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
 	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
 	move_base_msgs::MoveBaseActionGoal goal;	//Declare with name goal
 	final_assignment::service srv;	//Declare the service file as "srv"
+	
+	int X = srv.response.PosX;
+	int Y = srv.response.PosY;
 
 //positonCallback LOOP
 void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)	//Callback is executed verytime I receive a new topic
 {
 	//Receive the position of my robot and print it on the shell
-	ROS_INFO("The robot position is: [%i, %i]", msg->pose.pose.position.x, msg->pose.pose.position.y);
-	
-	//Created a mesage of type geometry_msgs Twist
-	geometry_msgs::Twist vel;
-
-	ros::Rate r(2);			//Declare a delay of 2 seconds with name "r
-
-	int X = srv.response.PosX;
-	int Y = srv.response.PosY;
-	
-	int choice;
-
-	std::cout << "Please choose one of the options bellow:"<< std::endl;
-	std::cout << "Press 7 for manual:"<< std::endl;
-	std::cout << "Press 1 for automatic and random:"<< std::endl;
-	std::cin >> choice;
-
-if(choice == 1)
-{
-	goal.goal.target_pose.header.frame_id = "map";
-	goal.goal.target_pose.pose.orientation.w = 1;
-	goal.goal.target_pose.pose.position.x = X;
-	goal.goal.target_pose.pose.position.x = Y;
-	std::cout << "Your target in X is: " << X << std::endl;
-	std::cout << "Your target in Y is: " << Y << std::endl;	
-	
-while((X - msg->pose.pose.position.x <= 0.05 && X - msg->pose.pose.position.x > -0.05) && (Y - msg->pose.pose.position.y <= 0.05 && Y - msg->pose.pose.position.y>-0.05))
-	{
-	std::cout << "Robot on target X and Y" << std::endl;
-	vel.linear.x = 0.0;	//stop the robot
-	vel.linear.y = 0.0;	//stop the robot
-	r.sleep();		//delay of 2s
-	//client.call(srv);	//call a new random position
-	}
-	std::cout << "Do you wish to continue in automatic mode? If yes, press 1 otherwise press 7 for manual mode"<< std::endl;
-	std::cin >> choice;
-if(choice == 1)
-	{
-	client.call(srv);	//call a new random position	
-	}
-else {std::cout << "Leaving automatic mode"<< std::endl;}	
-}
+	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
 }
 
 
@@ -93,6 +56,45 @@ int main(int argc, char **argv)
 	srv.request.min = 0;		//--------> N		
 	srv.request.max = 5;		//--------> M		
 
+	//Created a mesage of type geometry_msgs Twist
+	geometry_msgs::Twist vel;
+
+	ros::Rate r(2);			//Declare a delay of 2 seconds with name "r
+
+	int choice;
+
+	std::cout << "Please choose one of the options bellow:"<< std::endl;
+	std::cout << "Press 7 for manual:"<< std::endl;
+	std::cout << "Press 1 for automatic and random:"<< std::endl;
+	std::cin >> choice;
+
+if(choice == 1)
+{
+	goal.goal.target_pose.header.frame_id = "map";
+	goal.goal.target_pose.pose.orientation.w = 1;
+	goal.goal.target_pose.pose.position.x = X;
+	goal.goal.target_pose.pose.position.y = Y;
+	std::cout << "Your target in X is: " << X << std::endl;
+	std::cout << "Your target in Y is: " << Y << std::endl;	
+
+//const nav_msgs::Odometry::ConstPtr& msg;
+
+while((X - msg->pose.pose.position.x <= 0.05 && X - msg->pose.pose.position.x > -0.05) && (Y - msg->pose.pose.position.y <= 0.05 && Y - msg->pose.pose.position.y>-0.05))
+	{
+	std::cout << "Robot on target X and Y" << std::endl;
+	vel.linear.x = 0.0;	//stop the robot
+	vel.linear.y = 0.0;	//stop the robot
+	r.sleep();		//delay of 2s
+	//client.call(srv);	//call a new random position
+	}
+	std::cout << "Do you wish to continue in automatic mode? If yes, press 1 otherwise press 7 for manual mode"<< std::endl;
+	std::cin >> choice;
+if(choice == 1)
+	{
+	client.call(srv);	//call a new random position	
+	}
+else {std::cout << "Leaving automatic mode"<< std::endl;}	
+}
 	ros::spin();
 
 	while (ros::ok())

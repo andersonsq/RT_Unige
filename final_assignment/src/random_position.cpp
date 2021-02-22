@@ -25,21 +25,10 @@
 	bool myrandom (final_assignment::service::Request &req, 
 	final_assignment::service::Response &res)
 	{
-
-	//int target_position;
-	//int possible_position;
-	/*
-	possible_position[0] = {-4,-3};
-	possible_position[1] = {-4,2};
-	possible_position[2] = {-4,7};
-	possible_position[3] = {5,-7};
-	possible_position[4] = {5,-3};
-	possible_position[5] = {5,-1};
-	*/
 	int target_position = randMToN(0,5);
-
-	res.PosX = randMToN(req.min, req.max);
-	res.PosY = randMToN(req.min, req.max);
+	
+	//res.PosX = randMToN(req.min, req.max);
+	//res.PosY = randMToN(req.min, req.max);
 
 	//possible_position[0] = {-4,-3};
 	if(target_position == 0)
