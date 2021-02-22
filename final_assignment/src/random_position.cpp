@@ -37,35 +37,35 @@
 	res.PosY = -3;
 	}
 
-	//possible_position[0] = {-4,-2};
+	//possible_position[1] = {-4,-2};
 	else if(target_position == 1)
 	{
 	res.PosX = -4;
 	res.PosY = -2;
 	}
 
-	//possible_position[0] = {-4, 7};
+	//possible_position[2] = {-4, 7};
 	else if(target_position == 2)
 	{
 	res.PosX = -4;
 	res.PosY = 7;
 	}
 
-	//possible_position[0] = {5,-7};
+	//possible_position[3] = {5,-7};
 	else if(target_position == 3)
 	{
 	res.PosX = 5;
 	res.PosY = -7;
 	}
 
-	//possible_position[0] = {5,-3};
+	//possible_position[4] = {5,-3};
 	else if(target_position == 4)
 	{
 	res.PosX = 5;
 	res.PosY = -3;
 	}
 
-	//possible_position[0] = {5, -1};
+	//possible_position[5] = {5, -1};
 	else if(target_position == 5)
 	{
 	res.PosX = 5;
