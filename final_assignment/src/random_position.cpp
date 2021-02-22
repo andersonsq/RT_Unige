@@ -26,23 +26,63 @@
 	final_assignment::service::Response &res)
 	{
 
-	int target_position;
-	int possible_position[6];
-
+	//int target_position;
+	//int possible_position;
+	/*
 	possible_position[0] = {-4,-3};
 	possible_position[1] = {-4,2};
 	possible_position[2] = {-4,7};
 	possible_position[3] = {5,-7};
 	possible_position[4] = {5,-3};
 	possible_position[5] = {5,-1};
+	*/
+	int target_position = randMToN(0,5);
 
-	target_position = randMToN(0,5);
+	res.PosX = randMToN(req.min, req.max);
+	res.PosY = randMToN(req.min, req.max);
 
-	res.Pos = possible_position[target_position];
-	std::cout << "Random robot cordinates targets are: [%f]"<< possible_position << std::endl;
+	//possible_position[0] = {-4,-3};
+	if(target_position == 0)
+	{
+	res.PosX = -4;
+	res.PosY = -3;
+	}
 
-    	//res.PosY = randMToN(req.RandX, req.RandY);
-    	return true;
+	//possible_position[0] = {-4,-2};
+	else if(target_position == 1)
+	{
+	res.PosX = -4;
+	res.PosY = -2;
+	}
+
+	//possible_position[0] = {-4, 7};
+	else if(target_position == 2)
+	{
+	res.PosX = -4;
+	res.PosY = 7;
+	}
+
+	//possible_position[0] = {5,-7};
+	else if(target_position == 3)
+	{
+	res.PosX = 5;
+	res.PosY = -7;
+	}
+
+	//possible_position[0] = {5,-3};
+	else if(target_position == 4)
+	{
+	res.PosX = 5;
+	res.PosY = -3;
+	}
+
+	//possible_position[0] = {5, -1};
+	else if(target_position == 5)
+	{
+	res.PosX = 5;
+	res.PosY = -1;
+	}
+	return true;
 	}
 
 int main(int argc, char **argv)

@@ -1,4 +1,5 @@
 int32 min
 int32 max
 ---
-int32 Pos
+int32 PosX
+int32 PosY
