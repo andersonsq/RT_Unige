@@ -22,14 +22,18 @@
 	move_base_msgs::MoveBaseActionGoal goal;	//Declare with name goal
 	final_assignment::service srv;	//Declare the service file as "srv"
 	
-	int X = srv.response.PosX;
-	int Y = srv.response.PosY;
+	//int X = srv.response.PosX;
+	//int Y = srv.response.PosY;
+	int X_pos, Y_pos;
 
 //positonCallback LOOP
 void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)	//Callback is executed verytime I receive a new topic
 {
 	//Receive the position of my robot and print it on the shell
 	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
+
+	 X_pos = msg->pose.pose.position.x;
+	 Y_pos = msg->pose.pose.position.y;
 }
 
 
@@ -61,6 +65,9 @@ int main(int argc, char **argv)
 
 	ros::Rate r(2);			//Declare a delay of 2 seconds with name "r
 
+	int X = srv.response.PosX;
+	int Y = srv.response.PosY;
+
 	int choice;
 
 	std::cout << "Please choose one of the options bellow:"<< std::endl;
@@ -79,7 +86,7 @@ if(choice == 1)
 
 //const nav_msgs::Odometry::ConstPtr& msg;
 
-while((X - msg->pose.pose.position.x <= 0.05 && X - msg->pose.pose.position.x > -0.05) && (Y - msg->pose.pose.position.y <= 0.05 && Y - msg->pose.pose.position.y>-0.05))
+while((X - X_pos <= 0.05 && X - X_pos > -0.05) && (Y - Y_pos <= 0.05 && Y - Y_pos>-0.05))
 	{
 	std::cout << "Robot on target X and Y" << std::endl;
 	vel.linear.x = 0.0;	//stop the robot
