@@ -51,6 +51,10 @@
    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find final_assignment)/config/sim.rviz" />
 
+  <!-- Start my CPP file -->  
+    <node pkg="final_assignment" type="wall_follow_service_m.py" name="wall_follower" />
+    <node pkg="final_assignment" type="user_interface.cpp" name="user_interface" output="screen" />
+
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 	args="-urdf -model robot1 -param robot_description -x -5.0 -y 8.0 -z 0.05"/> 

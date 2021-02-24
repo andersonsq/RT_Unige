@@ -11,16 +11,18 @@
 #include "geometry_msgs/Twist.h"
 
 #include "move_base_msgs/MoveBaseActionGoal.h"
+#include "std_srvs/SetBool.h"
 
 #include <math.h>
 #include "final_assignment/service.h"
 
 
 	//Declare all variables as global
-	ros::Publisher pub; 		//Declare the publisher as global variable with name "pub"
-	ros::ServiceClient client;	//Declare the client service as global variable with name "client"
+	ros::Publisher pub; 				//Declare the publisher as global variable with name "pub"
+	ros::ServiceClient client, client2;		//Declare the client service as global variable with name "client"
 	move_base_msgs::MoveBaseActionGoal goal;	//Declare with name goal
-	final_assignment::service srv;	//Declare the service file as "srv"
+	std_srvs::SetBool follow_wall;
+	final_assignment::service srv;			//Declare the service file as "srv"
 
 	int X_pos, Y_pos;
 
@@ -44,6 +46,7 @@ int main(int argc, char **argv)
 
 	//Inicialize the client
 	client = n.serviceClient<final_assignment::service>("/setting_target");
+	client2 = n.serviceClient<std_srvs::SetBool>("/wall_follower");
 
 	//Call the random position
 	client.call(srv);
@@ -74,8 +77,9 @@ int main(int argc, char **argv)
 
 
 	std::cout << "Please choose one of the options bellow:"<< std::endl;
-	std::cout << "Press 2 for manual:"<< std::endl;
 	std::cout << "Press 1 for automatic and random:"<< std::endl;
+	std::cout << "Press 2 for manual:"<< std::endl;
+	std::cout << "Press 3 to use the wall follower option:"<< std::endl;
 	std::cin >> choice;
 
 if(choice == 1)
@@ -86,6 +90,7 @@ if(choice == 1)
 	goal.goal.target_pose.pose.position.y = Y;
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;	
+	pub.publish(goal);
 
 if((X - X_pos <= 0.05 && X - X_pos > -0.05) && (Y - Y_pos <= 0.05 && Y - Y_pos > -0.05))
 	{
@@ -127,6 +132,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = -4;
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option A, X = -4 and Y = -3" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -142,6 +148,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = -4;
 			goal.goal.target_pose.pose.position.y = -2;
 			std::cout << "You chose option B, X = -4 and Y = -2" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -157,6 +164,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = -4;
 			goal.goal.target_pose.pose.position.y = 7;
 			std::cout << "You chose option C, X = -4 and Y = 7" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -172,6 +180,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = 5;
 			goal.goal.target_pose.pose.position.y = -7;
 			std::cout << "You chose option D, X = 5 and Y = -7" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -187,6 +196,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = 5;
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option E, X = 5 and Y = -3" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -202,6 +212,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.x = 5;
 			goal.goal.target_pose.pose.position.y = -1;
 			std::cout << "You chose option F, X = 5 and Y = -1" << std::endl;
+			pub.publish(goal);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -217,6 +228,31 @@ else if (choice == 2)
 	}
 
 
+		// 3) start following the external walls
+
+else if (choice == 3)
+	{
+	std::cout << "NICE, now your robot will follow the wall in a automatic way" << std::endl;
+	wall_follower.request.data = true;
+	client2.call(wall_follower);
+	}
+
+
+		//4) stop in the last position
+
+
+else if (choice == 4)
+	{
+	std::cout << "Your robot will stop" << std::endl;
+	follow_wall.request.data = false;
+	client2.call(follow_wall);
+	goal.goal.target_pose.header.frame_id = "map";
+	goal.goal.target_pose.pose.orientation.w = 1;
+	goal.goal.target_pose.pose.position.x = X;
+	goal.goal.target_pose.pose.position.y = Y;
+	pub.publish(goal);
+	std::cout << "REACHED" << std::endl;
+	}
 
 	ros::spin();
 

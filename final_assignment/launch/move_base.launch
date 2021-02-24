@@ -8,5 +8,9 @@
     <rosparam file="$(find final_assignment)/param/global_costmap_params.yaml" command="load"/>
     <rosparam file="$(find final_assignment)/param/base_local_planner_params.yaml" command="load"/>
     <rosparam file="$(find final_assignment)/param/move_base_params.yaml" command="load"/>
+
+    <node pkg="final_assignment" type="wall_follow_service_m.py" name="wall_follower" />
+    <node pkg="final_assignment" type="user_interface.cpp" name="user_interface" output="screen" />
+
   </node>
 </launch>
