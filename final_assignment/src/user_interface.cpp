@@ -80,7 +80,9 @@ int main(int argc, char **argv)
 	std::cout << "Press 1 for automatic and random:"<< std::endl;
 	std::cout << "Press 2 for manual:"<< std::endl;
 	std::cout << "Press 3 to use the wall follower option:"<< std::endl;
+	std::cout << "Press 4 to stop the robot in the last position:"<< std::endl;
 	std::cin >> choice;
+
 
 if(choice == 1)
 {
@@ -91,6 +93,7 @@ if(choice == 1)
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;	
 	pub.publish(goal);
+	pub.publish(vel);
 
 if((X - X_pos <= 0.05 && X - X_pos > -0.05) && (Y - Y_pos <= 0.05 && Y - Y_pos > -0.05))
 	{
@@ -133,6 +136,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option A, X = -4 and Y = -3" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -149,6 +153,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -2;
 			std::cout << "You chose option B, X = -4 and Y = -2" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -165,6 +170,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = 7;
 			std::cout << "You chose option C, X = -4 and Y = 7" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -181,6 +187,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -7;
 			std::cout << "You chose option D, X = 5 and Y = -7" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -197,6 +204,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option E, X = 5 and Y = -3" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{
@@ -213,6 +221,7 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -1;
 			std::cout << "You chose option F, X = 5 and Y = -1" << std::endl;
 			pub.publish(goal);
+			pub.publish(vel);
 
 			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
 				{

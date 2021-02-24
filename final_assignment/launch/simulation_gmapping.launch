@@ -53,7 +53,9 @@
 
   <!-- Start my CPP file -->  
     <node pkg="final_assignment" type="wall_follow_service_m.py" name="wall_follower" />
-    <node pkg="final_assignment" type="user_interface.cpp" name="user_interface" output="screen" />
+    <node pkg="final_assignment" type="call_target" name="user_interface" output="screen" />
+    <node pkg="final_assignment" type="target_reply" name="randon_position_generator" output="screen" />
+
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
