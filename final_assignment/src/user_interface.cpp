@@ -233,8 +233,8 @@ else if (choice == 2)
 else if (choice == 3)
 	{
 	std::cout << "NICE, now your robot will follow the wall in a automatic way" << std::endl;
-	wall_follower.request.data = true;
-	client2.call(wall_follower);
+	follow_wall.request.data = true;
+	client2.call(follow_wall);
 	}
 
 
