@@ -30,7 +30,7 @@
 void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)	//Callback is executed verytime I receive a new topic
 {
 	//Receive the position of my robot and print it on the shell
-	ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
+	//ROS_INFO("The robot position is: [%f, %f]", msg->pose.pose.position.x, msg->pose.pose.position.y);
 
 	 X_pos = msg->pose.pose.position.x;
 	 Y_pos = msg->pose.pose.position.y;
@@ -75,6 +75,7 @@ int main(int argc, char **argv)
 
 	//	1) move randomly in the environment, by choosing 1 out of 6 possible target positions:[(-4,-3);(-4,2);(-4,7);(5,-7);(5,-3);(5,1)], implementing a random position service as in the assignment 1
 
+while(choice !=0){
 
 	std::cout << "Please choose one of the options bellow:"<< std::endl;
 	std::cout << "Press 1 for automatic and random:"<< std::endl;
@@ -83,33 +84,36 @@ int main(int argc, char **argv)
 	std::cout << "Press 4 to stop the robot in the last position:"<< std::endl;
 	std::cin >> choice;
 
-
 if(choice == 1)
 {
+	client.call(srv);
 	goal.goal.target_pose.header.frame_id = "map";
 	goal.goal.target_pose.pose.orientation.w = 1;
 	goal.goal.target_pose.pose.position.x = X;
 	goal.goal.target_pose.pose.position.y = Y;
 	std::cout << "Your target in X is: " << X << std::endl;
 	std::cout << "Your target in Y is: " << Y << std::endl;	
+	r.sleep();
 	pub.publish(goal);
-	pub.publish(vel);
 
-if((X - X_pos <= 0.05 && X - X_pos > -0.05) && (Y - Y_pos <= 0.05 && Y - Y_pos > -0.05))
+//while((X - X_pos <= 0.05 && X - X_pos > -0.05) && (Y - Y_pos <= 0.05 && Y - Y_pos > -0.05))
+while((X != X_pos) && (Y != Y_pos))
 	{
-	std::cout << "Robot on target X and Y" << std::endl;
-	vel.linear.x = 0.0;	//stop the robot
-	vel.linear.y = 0.0;	//stop the robot
+	std::cout << "Robot not on target X and Y" << std::endl;
+	ros::spinOnce();
 	r.sleep();		//delay of 2s
+	//std::cout << "Do you wish to continue in automatic mode? If yes, press 1 otherwise press 2 for manual mode"<< std::endl;
+	//std::cin >> choice;
 	//client.call(srv);	//call a new random position
 	}
-	std::cout << "Do you wish to continue in automatic mode? If yes, press 1 otherwise press 2 for manual mode"<< std::endl;
-	std::cin >> choice;
+	//std::cout << "Do you wish to continue in automatic mode? If yes, press 1 otherwise press 2 for manual mode"<< std::endl;
+	//std::cin >> choice;
+/*
 if(choice == 1)
 	{
 	client.call(srv);	//call a new random position	
 	}
-else {std::cout << "Leaving automatic mode"<< std::endl;}	
+else {std::cout << "Leaving automatic mode"<< std::endl;}	*/
 }
 
 
@@ -136,13 +140,15 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option A, X = -4 and Y = -3" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
+			//pub.publish(vel);
 
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
@@ -153,13 +159,15 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -2;
 			std::cout << "You chose option B, X = -4 and Y = -2" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
+			//pub.publish(vel);
 
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
@@ -170,13 +178,15 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = 7;
 			std::cout << "You chose option C, X = -4 and Y = 7" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
-
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//pub.publish(vel);
+			
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
@@ -187,13 +197,15 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -7;
 			std::cout << "You chose option D, X = 5 and Y = -7" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
+			//pub.publish(vel);
 
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
@@ -204,13 +216,15 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -3;
 			std::cout << "You chose option E, X = 5 and Y = -3" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
+			//pub.publish(vel);
 
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
@@ -221,20 +235,22 @@ else if (choice == 2)
 			goal.goal.target_pose.pose.position.y = -1;
 			std::cout << "You chose option F, X = 5 and Y = -1" << std::endl;
 			pub.publish(goal);
-			pub.publish(vel);
+			//pub.publish(vel);
 
-			if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+			//if((goal.goal.target_pose.pose.position.x - X_pos <= 0.05 && goal.goal.target_pose.pose.position.x - X_pos > -0.05) && (goal.goal.target_pose.pose.position.y - Y_pos <= 0.05 && goal.goal.target_pose.pose.position.y - Y_pos > -0.05))
+				while((X != X_pos) && (Y != Y_pos))
 				{
-				std::cout << "REACHED" << std::endl;
-				vel.linear.x = 0.0;	//stop the robot
-				vel.linear.y = 0.0;	//stop the robot
+				std::cout << "NOT REACHED" << std::endl;
+				//vel.linear.x = 0.0;	//stop the robot
+				//vel.linear.y = 0.0;	//stop the robot
+				ros::spinOnce();
 				r.sleep();		//delay of 2s
 				}
 		 break;
 	      default :
 		 std::cout << "Invalid option, try again" << std::endl;
    			}
-	}
+	}/*
 
 
 		// 3) start following the external walls
@@ -261,7 +277,7 @@ else if (choice == 4)
 	goal.goal.target_pose.pose.position.y = Y;
 	pub.publish(goal);
 	std::cout << "REACHED" << std::endl;
-	}
+	}*/
 
 	ros::spin();
 
@@ -269,7 +285,7 @@ else if (choice == 4)
 	{	
 	/**/
 	}
-
+}
 return 0;
 }
 
