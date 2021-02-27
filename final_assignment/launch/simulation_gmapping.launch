@@ -52,7 +52,7 @@
    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find final_assignment)/config/sim.rviz" />
 
   <!-- Start my CPP file -->  
-    <node pkg="final_assignment" type="wall_follow_service_m.py" name="wall_follower" />
+    <node pkg="final_assignment" type="wall_follow_service_m.py" name="follow_wall"/>
     <node pkg="final_assignment" type="call_target" name="user_interface" output="screen" />
     <node pkg="final_assignment" type="target_reply" name="randon_position_generator" output="screen" />
 
