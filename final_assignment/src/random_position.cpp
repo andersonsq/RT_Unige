@@ -16,6 +16,7 @@
 	ros::ServiceServer service;	//Declare the service server as global variable with name "service"
 	final_assignment::service srv;	//Call my service.srv fille from my square_robot::package and give the name of "srv"	//Server function to generate my random number from 0(N) to 5(M)
 
+	//Function to generate my random numbers between 0 and 5
 	double randMToN(double M, double N)
 	{     
 	return M + (rand() / (RAND_MAX / (N-M)));	
@@ -84,11 +85,6 @@ int main(int argc, char **argv)
 	service = n.advertiseService("/setting_target", myrandom);
 
 	ros::spin();
-
-	while (ros::ok())
-	{
-	/**/	
-	}
 
 return 0;
 

@@ -36,19 +36,15 @@ void positionCallback(const nav_msgs::Odometry::ConstPtr& msg)	//Callback is exe
 
 	 X_pos = msg->pose.pose.position.x;	//Actual position of robot in X axis
 	 Y_pos = msg->pose.pose.position.y;	//Actual position of robot in Y axis
-}
 
-//SubscriberCallback LOOP to check if the robbbot is out of range
-void subscriberCallback(const nav_msgs::Odometry::ConstPtr& msg)
-{
-	//Logic to check that I never receive a position outside my range
+	
+	//Logic to check if the robbbot is out of range
 	if((msg->pose.pose.position.x > 6.0 || msg->pose.pose.position.x < -6.0) || (msg->pose.pose.position.y > 9.0 || msg->pose.pose.position.y < -9.0))
 		{
 		std::cout << "Robot out of range" << std::endl;
 		ros::shutdown();
 		}
 }
-	
 
 
 int main(int argc, char **argv)
@@ -66,7 +62,7 @@ int main(int argc, char **argv)
 	client.call(srv);
 
 	//Initialize my publisher in /move_base
-	pub = n.advertise<move_base_msgs::MoveBaseActionGoal>("move_base/goal", 1000);	//To fill the publisher, I need to use the comand "rostopic type /move_base
+	pub = n.advertise<move_base_msgs::MoveBaseActionGoal>("move_base/goal", 1000);	//To fill the publisher, I need to use the command "rostopic type /move_base
 
 	//Subscribe and set a position in positionCall back function
 	ros::Subscriber sub = n.subscribe("/odom", 1000, positionCallback); 		//I'm subscribing in "/odom"	 
@@ -267,7 +263,8 @@ if (choice == 3)
 	std::cin >> choice;
 		if(choice == 8)
 		{
-		follow_wall.request.data = false;		//request to the
+		follow_wall.request.data = false;		//request to stop the wall follower
+		client.call(srv);
 		pub.publish(goal);
 		std::cout << "Robot not following the wall anymore" << std::endl; 
 		}
